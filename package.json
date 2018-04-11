@@ -21,12 +21,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/victorbofill/git-template.git"
+    "url": "git+https://github.com/jklipton/git-template.git"
   },
-  "author": "Victor Bofill <victorm.bofill@gmail.com>",
+  "author": "Jennifer Lipton <jkl.lipton@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/victorbofill/git-template/issues"
+    "url": "https://github.com/jklipton/git-template/issues"
   },
-  "homepage": "https://github.com/victorbofill/git-template#readme"
+  "homepage": "https://github.com/jklipton/git-template#readme"
 }
