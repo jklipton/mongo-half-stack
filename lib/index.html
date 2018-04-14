@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <ul id="mini-horses"></ul>
+    <script>
+        fetch('/mini-horses')
+            .then(response => response.json())
+            .then(miniHorses => {
+                const ul = document.getElementById('mini-horses');
+                miniHorses.forEach(miniHorse => {
+                    const li = document.createElement('li');
+                    // li.innerText = `${miniHorse.name} ${miniHorse.description}`; ??
+                    ul.appendChild(li);
+                });
+            });
+    </script>
+</body>
+</html
