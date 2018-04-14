@@ -36,7 +36,7 @@ describe('MiniHorses API', () => {
         return chai.request(app)
             .get('/miniHorses')
             .then(({ body }) => {
-                console.log( body );
+                assert.deepEqual(body, []);
             });
     });
 
@@ -51,39 +51,54 @@ describe('MiniHorses API', () => {
             });
     });
 
-    // it('gets all minihorses', () => {
-    //     return chai.request(app)
-    //         .post('/miniHorses')
-    //         .send(sebastian)
-    //         .then( ({ body }) => {
-    //             sebastian = body;
-    //             return chai.request(app)
-    //                 .get('/miniHorses');
-    //         })
-    //         .then( ({ body }) => {
-    //             assert.deepEqual(body, [midnite, sebastian]);
-    //         });
-    // });
-
-    it('find specific minihorse', () => {
+    it('gets all minihorses', () => {
         return chai.request(app)
-            .get(`/miniHorses/${midnite._id}`)
+            .post('/miniHorses')
+            .send(sebastian)
             .then( ({ body }) => {
-                assert.equal(body.name, midnite.name);
+                sebastian = body;
+                return chai.request(app)
+                    .get('/miniHorses');
+            })
+            .then( ({ body }) => {
+                assert.deepEqual(body, [midnite, sebastian]);
             });
     });
 
-    // it('deletes a minihorse', () => {
-    //     return chai.request(app)
-    //         .del(`/miniHorses/${sebastian._id}`)
-    //         .then(() => {
-    //             return chai.request(app)
-    //                 .get('/miniHorses');
-    //         })
-    //         .then(({ body }) => {
-    //             assert.deepEqual(body, [midnite]);
-    //         });
-    // });
+    it('find specific minihorse', () => {
+        return chai.request(app)
+            .get(`/miniHorses/${sebastian._id}`)
+            .then( ({ body }) => {
+                assert.deepEqual(body, [sebastian]);
+            });
+    });
+
+    it('updates minihorse', () => {
+        sebastian.descripton = 'gone too soon';
+
+        return chai.request(app)
+            .put(`/miniHorses/${sebastian._id}`)
+            .send(sebastian)
+            .then(() => {
+                return chai.request(app)
+                    .get(`/miniHorses/${sebastian._id}`);
+            })
+            .then(({ body }) => {
+                assert.deepEqual(body, [sebastian]);
+            });
+    });
+
+    it('deletes a minihorse', () => {
+        return chai.request(app)
+            .del(`/miniHorses/${sebastian._id}`)
+            .then(() => {
+                return chai.request(app)
+                    .get('/miniHorses');
+            })
+            .then(({ body }) => {
+                assert.deepEqual(body, [midnite]);
+            });
+    });
 
 
     after(() => mongo.client.close());
