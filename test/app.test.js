@@ -9,8 +9,8 @@ const { assert } = chai;
 describe('MiniHorses API', () => {
 
     before((done) => {
-        MiniHorse.remove({}, (err) => { 
-            done(); 
+        MiniHorse.remove({}, () => {
+            done();
         });
     });
 
@@ -77,7 +77,7 @@ describe('MiniHorses API', () => {
                 return chai.request(server)
                     .get(`/mini-horses/${sebastian._id}`);
             })
-            .then(({ body }) => {            
+            .then(({ body }) => {
                 assert.deepEqual(body, sebastian);
             });
     });

@@ -18,8 +18,7 @@
     "jquery": true,
     "node": true,
     "es6": true,
-    "mocha": true,
-    "fastify": true
+    "mocha": true
   },
   "rules": {
     "no-console": "off",
