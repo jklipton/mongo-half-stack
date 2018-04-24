@@ -1,22 +1,16 @@
-const mongo = require('../lib/mongodb');
+const server = require('../server');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const app = require('../lib/app');
+const MiniHorse = require('../lib/models/mini-horse');
 
 chai.use(chaiHttp);
 const { assert } = chai;
 
-
 describe('MiniHorses API', () => {
 
-    before(() => {
-        return mongo.then(db => {
-            return db.dropCollection('mini-horses')
-                .catch( err => {
-                    if (err.codeName !== 'NamespaceNotFound') {
-                        throw err;
-                    }
-                });
+    before((done) => {
+        MiniHorse.remove({}, (err) => { 
+            done(); 
         });
     });
 
@@ -33,16 +27,16 @@ describe('MiniHorses API', () => {
     };
 
     it('start with no horses', () => {
-        return chai.request(app)
-            .get('/miniHorses')
+        return chai.request(server)
+            .get('/mini-horses')
             .then(({ body }) => {
                 assert.deepEqual(body, []);
             });
     });
 
     it('saves a mini horse', () => {
-        return chai.request(app)
-            .post('/miniHorses')
+        return chai.request(server)
+            .post('/mini-horses')
             .send(midnite)
             .then(({ body }) => {
                 assert.ok(body._id);
@@ -52,13 +46,13 @@ describe('MiniHorses API', () => {
     });
 
     it('gets all minihorses', () => {
-        return chai.request(app)
-            .post('/miniHorses')
+        return chai.request(server)
+            .post('/mini-horses')
             .send(sebastian)
             .then( ({ body }) => {
                 sebastian = body;
-                return chai.request(app)
-                    .get('/miniHorses');
+                return chai.request(server)
+                    .get('/mini-horses');
             })
             .then( ({ body }) => {
                 assert.deepEqual(body, [midnite, sebastian]);
@@ -66,41 +60,40 @@ describe('MiniHorses API', () => {
     });
 
     it('find specific minihorse', () => {
-        return chai.request(app)
-            .get(`/miniHorses/${sebastian._id}`)
+        return chai.request(server)
+            .get(`/mini-horses/${sebastian._id}`)
             .then( ({ body }) => {
-                assert.deepEqual(body, [sebastian]);
+                assert.deepEqual(body, sebastian);
             });
     });
 
     it('updates minihorse', () => {
-        sebastian.descripton = 'gone too soon';
+        sebastian.description = 'gone too soon';
 
-        return chai.request(app)
-            .put(`/miniHorses/${sebastian._id}`)
+        return chai.request(server)
+            .put(`/mini-horses/${sebastian._id}`)
             .send(sebastian)
             .then(() => {
-                return chai.request(app)
-                    .get(`/miniHorses/${sebastian._id}`);
+                return chai.request(server)
+                    .get(`/mini-horses/${sebastian._id}`);
             })
-            .then(({ body }) => {
-                assert.deepEqual(body, [sebastian]);
+            .then(({ body }) => {            
+                assert.deepEqual(body, sebastian);
             });
     });
 
     it('deletes a minihorse', () => {
-        return chai.request(app)
-            .del(`/miniHorses/${sebastian._id}`)
+        return chai.request(server)
+            .del(`/mini-horses/${sebastian._id}`)
             .then(() => {
-                return chai.request(app)
-                    .get('/miniHorses');
+                return chai.request(server)
+                    .get('/mini-horses');
             })
             .then(({ body }) => {
                 assert.deepEqual(body, [midnite]);
             });
     });
 
-
-    after(() => mongo.client.close());
+    after(() => server.close());
 
 });
