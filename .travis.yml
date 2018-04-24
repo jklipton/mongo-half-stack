@@ -1,12 +1,6 @@
 language: node_js
-node_js:
-  - "8"
-sudo: false
-services:
+node_js: "8"
+services: 
   - mongodb
-addons:
-  apt:
-    sources:
-    - mongodb-3.6-precise
-    packages:
-    - mongodb-org-server 
+env:
+  - MONGODB_URI=mongodb://localhost:27017/mini-horses
